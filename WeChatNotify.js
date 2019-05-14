@@ -5,7 +5,7 @@
 // @license      MIT
 // @description  try to take over the world!
 // @author       影子
-// @match        https://wx.qq.com/
+// @match        https://wx.qq.com/*
 // @grant        none
 // ==/UserScript==
 
@@ -18,9 +18,28 @@ function sleep(milliseconds) {
     }
 }
 
+function imitateClick(oElement, iClientX, iClientY) {
+                var oEvent;
+                if (document.createEventObject) { //For IE
+                    oEvent = document.createEventObject();
+                    oEvent.clientX = iClientX;
+                    oEvent.clientY = iClientY;
+                    oElement.fireEvent("onclick", oEvent);
+                } else {
+                    oEvent = document.createEvent("MouseEvents");
+                    oEvent.initMouseEvent("click", true, true, document.defaultView, 0, 0, 0,
+                                            iClientX, iClientY/*, false, false, false, false, 0, null*/);
+                    oElement.dispatchEvent(oEvent);
+                }
+            }
+
+function send(event){
+    sendTextMessage();
+}
+
 (function() {
     'use strict';
-    //debugger;
+    debugger;
     var oldMsg = "";
      setInterval(function(){
         // Your code here...
@@ -35,14 +54,20 @@ function sleep(milliseconds) {
         var msgList = document.getElementsByClassName("msg ng-scope");
         if(msgList != null){
             var itemMsg = msgList[0];
+            var editArea = document.getElementById("editArea");
             if (itemMsg != null){
-                var msg = itemMsg.innerText;
+                var msg = itemMsg.innerText.trim();
                 if(msg===oldMsg){
                 }else{
                     oldMsg = msg;
-                    alert(msg);
+                    //var editArea = document.getElementById("editArea");
+                    if(editArea != null){
+                        $('.edit_area').html(oldMsg);
+                        $(".edit_area").trigger($.Event("keydown", { keyCode: 13,ctrlKey: true}));
+                        $('.btn_send').click();
+                    }
                 }
             }
         }
-    },1000)
+    },5000)
 })();
