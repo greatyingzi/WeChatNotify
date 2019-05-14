@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WeChat Notify
 // @namespace    http://tampermonkey.net/
-// @version      0.11
+// @version      0.1
 // @license      MIT
 // @description  try to take over the world!
 // @author       影子
@@ -39,11 +39,12 @@ function send(event){
 
 (function() {
     'use strict';
-    debugger;
+    //debugger;
     var oldMsg = "";
+    var tabs = document.getElementsByClassName("chat");
      setInterval(function(){
         // Your code here...
-        var redPop = document.getElementsByClassName("icon web_wechat_reddot_middle ng-binding ng-scope");
+        /*var redPop = document.getElementsByClassName("icon web_wechat_reddot_middle ng-binding ng-scope");
         if(redPop != null){
             var item1 = redPop[0];
             if (item1!=null){
@@ -68,6 +69,29 @@ function send(event){
                     }
                 }
             }
-        }
+        }*/
+
+
+
+
+
     },5000)
+ //切换tab页,防止微信自动退出
+    var currentTabIndex = 1;
+    setInterval(function(){
+       changeTab();
+    },10000)
+
+    function changeTab(){
+        var id = setInterval(function(){
+
+        tabs[currentTabIndex].click();
+        if(currentTabIndex == 0){
+            currentTabIndex = 1;
+           clearInterval(id);
+        }else{
+            currentTabIndex = 0;
+        }
+        },1000)
+    }
 })();
